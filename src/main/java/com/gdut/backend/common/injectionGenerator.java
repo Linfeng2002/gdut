@@ -18,7 +18,7 @@ public class injectionGenerator {
                 // 策略配置
                 .strategyConfig((scanner, builder) -> builder.addInclude(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all"))
                         .controllerBuilder().enableRestStyle().enableHyphenStyle()
-                        .entityBuilder().enableLombok().entityBuilder().enableFileOverride()
+                        .entityBuilder().enableLombok().enableFileOverride().enableTableFieldAnnotation().enableChainModel()
                         .build())
                 /*
                     模板引擎配置，默认 Velocity 可选模板引擎 Beetl 或 Freemarker

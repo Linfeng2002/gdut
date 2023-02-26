@@ -1,16 +1,21 @@
 package com.gdut.backend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gdut.backend.common.QueryPageParam;
+import com.gdut.backend.common.Result;
 import com.gdut.backend.po.User;
 import com.gdut.backend.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.gdut.backend.common.Result;
 
+import javax.annotation.Resource;
 import javax.jws.soap.SOAPBinding;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,14 +30,80 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    @Resource
     private IUserService userService;
 
-    @GetMapping("/list")
-    public List<User> list(@RequestParam(value = "user") User user ){
+    //全部分页查询
+    @RequestMapping ("/listPage")
+    public Result listPage(@RequestBody QueryPageParam query){
+        HashMap param = query.getParam();
+        String username = (String)param.get("username");
+
+
+        Page<User> userPage = new Page();
+//        userPage.setSize(-1);
+//        userPage.setCurrent(-1);
+        userPage.setSize(query.getPageSize());
+        userPage.setCurrent(query.getPageNum());
+
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper() ;
-       lambdaQueryWrapper.like(User::getName,user.getName());
-        return   userService.list(lambdaQueryWrapper);
+
+        lambdaQueryWrapper.like(User::getUsername,username);
+
+
+
+
+        IPage<User> page = userService.page(userPage,lambdaQueryWrapper);
+
+        return Result.success(page.getTotal(),page.getRecords());
     }
+    //单独查询
+    @GetMapping("/query")
+    public Result query(@RequestBody User user){
+
+        String username=user.getUsername();
+        Integer sex1 = user.getSex();
+        Integer roleId1 = user.getRoleId();
+        String sex=sex1.toString();
+        String roleId=roleId1.toString();
+        LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper() ;
+        if(StringUtils.isNotBlank(username) && !"null".equals(username)){
+            lambdaQueryWrapper.eq(User::getUsername,username);
+        }
+
+        if(StringUtils.isNotBlank(sex)){
+            lambdaQueryWrapper.eq(User::getSex,sex);
+        }
+        if(StringUtils.isNotBlank(roleId)){
+            lambdaQueryWrapper.eq(User::getRoleId,roleId);
+        }
+            Object data=userService.list(lambdaQueryWrapper);
+        return Result.success(data);
+    }
+
+    //根据用户名查找
+    @RequestMapping("/findByNo")
+    public Result findByNo(@RequestParam String no){
+        List list = userService.lambdaQuery().eq(User::getUsername,no).list();
+        return list.size()>0?Result.success(list):Result.fail();
+    }
+    //新增
+    @RequestMapping ("/save")
+    public Result save(@RequestBody User user){
+        return userService.save(user)?Result.success():Result.fail();
+    }
+    //更新
+    @RequestMapping("/update")
+    public Result update(@RequestBody User user){return userService.updateById(user)?Result.success():Result.fail();}
+    //删除
+    @RequestMapping("/delete")
+    public Result del(@RequestParam String id){
+        return userService.removeById(id)?Result.success():Result.fail();
+    }
+
+
+//    @PostMapping("/login")
+//    public
+
 
 }

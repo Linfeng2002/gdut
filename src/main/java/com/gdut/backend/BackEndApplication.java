@@ -8,8 +8,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 
 @ServletComponentScan
-@SpringBootApplication
-@MapperScan("com.baomidou.mybatisplus.samples.quickstart.mapper")
+@SpringBootApplication()
+@MapperScan("com.gdut.backend.mapper")
 public class BackEndApplication {
 
     public static void main(String[] args) {
@@ -19,8 +19,6 @@ public class BackEndApplication {
     }
 
 
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(BackEndApplication.class);
-    }
+
 
 }

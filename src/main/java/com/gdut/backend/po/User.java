@@ -1,10 +1,16 @@
 package com.gdut.backend.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -12,62 +18,52 @@ import lombok.Setter;
  * </p>
  *
  * @author 杰哥
- * @since 2023-02-26
+ * @since 2023-03-25
  */
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
+@TableName("user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
+    @ApiModelProperty("主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * 用户名
-     */
+    @ApiModelProperty("用户名")
+    @TableField("username")
     private String username;
 
-    /**
-     * 密码
-     */
+    @ApiModelProperty("密码")
+    @TableField("password")
     private String password;
 
-    /**
-     * 年龄
-     */
+    @ApiModelProperty("年龄")
+    @TableField("age")
     private Integer age;
 
-    /**
-     * 性别
-     */
+    @ApiModelProperty("性别")
+    @TableField("sex")
     private Integer sex;
 
-    /**
-     * 电话
-     */
+    @ApiModelProperty("电话")
+    @TableField("phone")
     private String phone;
 
-    /**
-     * 昵称
-     */
+    @ApiModelProperty("昵称")
+    @TableField("name")
     private String name;
 
-    /**
-     * 附件
-     */
+    @ApiModelProperty("附件")
+    @TableField("annex")
     private byte[] annex;
 
-    /**
-     * 缩略附件
-     */
+    @ApiModelProperty("缩略附件")
+    @TableField("annex_narrow")
     private byte[] annexNarrow;
 
-    /**
-     * 权限
-     */
+    @ApiModelProperty("权限")
+    @TableField("role_id")
     private Integer roleId;
 }
