@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdut.backend.mapper.CommentMapper">
+
+    <select id="getByParentId" resultType="com.gdut.backend.po.Comment">
+        select * from comment where parent_id=${id} and type=${type} order by gmt_creat desc
+    </select>
+</mapper>

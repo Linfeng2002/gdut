@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdut.backend.mapper.QuestionMapper">
+
+    <update id="viewCount" parameterType="gdut.backend.po.Question">
+        update question
+        set
+        viewCount=viewCount+#{viewCount,jdbcType=INTEGER}
+        where id=#{id}
+
+    </update>
+
+    <update id="likeCount" parameterType="gdut.backend.po.Question">
+        update question
+        set
+            likeCount=likeCount+#{likeCount,jdbcType=INTEGER}
+        where id=#{id}
+
+    </update>
+
+    <update id="commentCount" parameterType="gdut.backend.po.Question">
+        update question
+        set
+            commentCount=question.commentCount+#{commentCount,jdbcType=INTEGER}
+        where id=#{id}
+
+    </update>
+</mapper>
