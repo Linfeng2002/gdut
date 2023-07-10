@@ -17,4 +17,8 @@ import java.util.List;
 public interface CommentMapper extends BaseMapper<Comment> {
 
     List<Comment> getByParentId(@Param("id") String id, @Param("type") int type);
+
+    boolean likeCount(Comment comment);
+
+    boolean commentCount(Comment comment);
 }

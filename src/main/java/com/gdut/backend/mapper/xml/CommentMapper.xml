@@ -5,4 +5,19 @@
     <select id="getByParentId" resultType="com.gdut.backend.po.Comment">
         select * from comment where parent_id=${id} and type=${type} order by gmt_creat desc
     </select>
+
+    <update id="likeCount" parameterType="com.gdut.backend.po.Comment">
+        update comment
+        set
+            like_count=like_count+${likeCount,jdbcType=INTEGER}
+        where id=${id}
+    </update>
+
+    <update id="commentCount" parameterType="com.gdut.backend.po.Comment">
+        update comment
+        set
+            comment_count=comment_count+${commentCount,jdbcType=INTEGER}
+        where id=${id}
+    </update>
+
 </mapper>

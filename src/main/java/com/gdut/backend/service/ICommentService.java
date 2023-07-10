@@ -1,5 +1,6 @@
 package com.gdut.backend.service;
 
+import com.gdut.backend.common.Result;
 import com.gdut.backend.po.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +17,8 @@ import java.util.List;
 public interface ICommentService extends IService<Comment> {
 
     List<Comment> getByParentId(String id,int type);
+
+    Result likeCount(String id);
+
+    Result commentCount(String id);
 }

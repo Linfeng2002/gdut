@@ -73,18 +73,20 @@ public class QuestionController {
         } catch (NumberFormatException e) {
             throw new CustomizeException(CustomizeErrorCode.INVALID_INPUT);
         }
-        Question question = questionService.getById(questionId);
-        List<Comment> comments=commentService.getByParentId(String.valueOf(questionId),1);
         questionService.viewCount(id);
+        Question question = questionService.getById(questionId);
+        List<Comment> comments = commentService.getByParentId(String.valueOf(questionId),1);
+
         model.addAttribute("question",question);
         model.addAttribute("comment",comments);
-        return Result.success();
+        return Result.success(model);
     }
     //新增
     @RequestMapping ("/save")
     public Result save(@RequestBody Question question){
 
-
+        if(question.getDiscription()==null) throw new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY);
+        if(question.getId()==null) throw new CustomizeException((CustomizeErrorCode.QUESTION_NOT_FOUND));
 
         if(question.getGmtCreat()==null){
             String time= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));

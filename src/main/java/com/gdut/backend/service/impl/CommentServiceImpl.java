@@ -1,5 +1,6 @@
 package com.gdut.backend.service.impl;
 
+import com.gdut.backend.common.Result;
 import com.gdut.backend.po.Comment;
 import com.gdut.backend.mapper.CommentMapper;
 import com.gdut.backend.service.ICommentService;
@@ -28,5 +29,22 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public List<Comment> getByParentId(String id,int type) {
         commentMapper.getByParentId(id,type);
         return null;
+    }
+
+    @Override
+    public Result likeCount(String id) {
+        Comment comment = new Comment();
+        comment.setLikeCount(1);
+        comment.setId(Integer.valueOf(id));
+        return commentMapper.likeCount(comment)?Result.success():Result.fail();
+
+    }
+
+    @Override
+    public Result commentCount(String id) {
+        Comment comment = new Comment();
+        comment.setCommentCount(1);
+        comment.setId(Integer.valueOf(id));
+        return commentMapper.commentCount(comment)?Result.success():Result.fail();
     }
 }

@@ -3,6 +3,7 @@ package com.gdut.backend.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gdut.backend.common.QueryPageParam;
@@ -39,7 +40,6 @@ public class UserController {
         HashMap param = query.getParam();
         String username = (String)param.get("username");
 
-
         Page<User> userPage = new Page();
 //        userPage.setSize(-1);
 //        userPage.setCurrent(-1);
@@ -50,9 +50,6 @@ public class UserController {
 
         lambdaQueryWrapper.like(User::getUsername,username);
 
-
-
-
         IPage<User> page = userService.page(userPage,lambdaQueryWrapper);
 
         return Result.success(page.getTotal(),page.getRecords());
@@ -62,21 +59,12 @@ public class UserController {
     public Result query(@RequestBody User user){
 
         String username=user.getUsername();
-        Integer sex1 = user.getSex();
-        Integer roleId1 = user.getRoleId();
-        String sex=sex1.toString();
-        String roleId=roleId1.toString();
+
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper() ;
         if(StringUtils.isNotBlank(username) && !"null".equals(username)){
             lambdaQueryWrapper.eq(User::getUsername,username);
         }
 
-        if(StringUtils.isNotBlank(sex)){
-            lambdaQueryWrapper.eq(User::getSex,sex);
-        }
-        if(StringUtils.isNotBlank(roleId)){
-            lambdaQueryWrapper.eq(User::getRoleId,roleId);
-        }
             Object data=userService.list(lambdaQueryWrapper);
         return Result.success(data);
     }
@@ -100,8 +88,10 @@ public class UserController {
     public Result del(@RequestParam String id){
         return userService.removeById(id)?Result.success():Result.fail();
     }
-
-
+    @RequestMapping("/login")
+    public Result login(@RequestBody User user){return userService.login(user);}
+    @RequestMapping("/logout")
+    public Result logout(@RequestBody User user){return userService.logout();}
 //    @PostMapping("/login")
 //    public
 
