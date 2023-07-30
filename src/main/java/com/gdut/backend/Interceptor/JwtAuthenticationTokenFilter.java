@@ -1,5 +1,6 @@
 package com.gdut.backend.Interceptor;
 
+import com.gdut.backend.exception.CustomizeErrorCode;
 import com.gdut.backend.redis.RedisCache;
 import com.gdut.backend.common.SessionTokenUtil;
 import com.gdut.backend.po.User;
@@ -48,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String redisKey = "login:" + userid;
         User user = redisCache.getCacheObject(redisKey);
         if(Objects.isNull(user)){
-            throw new RuntimeException("用户未登录");
+            throw new RuntimeException(CustomizeErrorCode.NO_LOGIN.getMessage());
         }
         //存入SecurityContextHolder
         //获取权限信息封装到Authentication中

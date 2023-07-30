@@ -31,19 +31,18 @@ public class CommentController {
     private CommentServiceImpl commentService;
 
     @RequestMapping("/query")
-    public Result query(@RequestParam  String id){
-        if (commentService.getById(id)==null) throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
+    public Result query(@RequestParam(value = "id")  String id,@RequestParam(value = "type") int type){
+        if (commentService.getById(id)==null) return Result.fail(new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND)) ;
 
-        List<Comment> comments=commentService.getByParentId(id,2);
+        List<Comment> comments=commentService.getByParentId(id,type);
 
         return Result.success(comments);
     }
 
     @RequestMapping("/save")
     public Result save(@RequestBody Comment comment){
-        if(comment.getDiscription()==null) throw new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY);
-        if(comment.getId()==null)throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
-
+        if(comment.getDiscription()==null) return Result.fail(new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY) );
+        if(comment.getId()==null)return Result.fail(new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND)) ;
         if(comment.getGmtCreat()==null) {
             String time= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
             comment.setGmtCreat(LocalDateTime.parse(time));
@@ -55,15 +54,15 @@ public class CommentController {
         return commentService.updateById(comment)?Result.success():Result.fail();
     }
     @RequestMapping("/delete")
-    public Result delete(@RequestParam String id) {
+    public Result delete(@RequestParam(value = "id") String id) {
         return commentService.removeById(id)?Result.success():Result.fail();
     }
     @RequestMapping("/likeCount")
-    public Result likeCount(@RequestParam String id){
+    public Result likeCount(@RequestParam(value = "id") String id){
         return commentService.likeCount(id);
     }
     @RequestMapping("/commentCount")
-    public Result viewCount(@RequestParam String id){
+    public Result viewCount(@RequestParam(value = "id") String id){
         return commentService.commentCount(id);
     }
 

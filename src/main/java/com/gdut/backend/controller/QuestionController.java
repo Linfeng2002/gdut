@@ -66,7 +66,7 @@ public class QuestionController {
 
     //单个查询问题
     @RequestMapping("/query")
-    public Result page(@RequestParam String id, Model model){
+    public Result page(@RequestParam(value = "id") String id, Model model){
         Long questionId = null;
         try {
             questionId = Long.parseLong(id);
@@ -76,7 +76,6 @@ public class QuestionController {
         questionService.viewCount(id);
         Question question = questionService.getById(questionId);
         List<Comment> comments = commentService.getByParentId(String.valueOf(questionId),1);
-
         model.addAttribute("question",question);
         model.addAttribute("comment",comments);
         return Result.success(model);
@@ -85,8 +84,8 @@ public class QuestionController {
     @RequestMapping ("/save")
     public Result save(@RequestBody Question question){
 
-        if(question.getDiscription()==null) throw new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY);
-        if(question.getId()==null) throw new CustomizeException((CustomizeErrorCode.QUESTION_NOT_FOUND));
+        if(question.getDiscription()==null) return Result.fail(new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY) );
+        if(question.getId()==null) return Result.fail(new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND ));
 
         if(question.getGmtCreat()==null){
             String time= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
@@ -97,25 +96,52 @@ public class QuestionController {
     }
     //更新
     @RequestMapping("/update")
-    public Result update(@RequestBody Question question){return questionService.updateById(question)?Result.success():Result.fail();}
+    public Result update(@RequestBody Question question){
+        if(questionService.getById(question.getId())!=null)
+        {
+            questionService.updateById(question);
+            return Result.success();
+        }else {
+            return Result.fail(new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND));
+        }
+    }
     //删除
     @RequestMapping("/delete")
-    public Result del(@RequestParam String id){
+    public Result del(@RequestParam(value = "id") String id){
         return questionService.removeById(id)?Result.success():Result.fail();
     }
     //游览数增加
     @RequestMapping("/viewCount")
-    public Result viewCount(@RequestParam String id){
-       return questionService.viewCount(id)?Result.success():Result.fail();
+    public Result viewCount(@RequestParam(value = "id") String id){
+            if(questionService.getById(id)!=null)
+            {
+                  questionService.viewCount(id);
+                  return Result.success();
+            }else {
+                return Result.fail(new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND));
+            }
     }
     //点赞数增加
     @RequestMapping("/likeCount")
-    public Result likeCount(@RequestParam String id){
-        return questionService.likeCount(id)?Result.success():Result.fail();
+    public Result likeCount(@RequestParam(value = "id") String id){
+        if(questionService.getById(id)!=null)
+        {
+            questionService.likeCount(id);
+            return Result.success();
+        }else {
+            return Result.fail(new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND));
+        }
     }
     //评论数增加
     @RequestMapping("/commentCount")
-    public Result commentCount(@RequestParam String id){
-        return questionService.commentCount(id)?Result.success():Result.fail();
+    public Result commentCount(@RequestParam(value = "id") String id){
+        if(questionService.getById(id)!=null)
+        {
+            questionService.commentCount(id);
+            return Result.success();
+        }else {
+            return Result.fail(new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND));
+        }
+
     }
 }

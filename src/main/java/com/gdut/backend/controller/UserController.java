@@ -91,7 +91,7 @@ public class UserController {
     @RequestMapping("/login")
     public Result login(@RequestBody User user){return userService.login(user);}
     @RequestMapping("/logout")
-    public Result logout(@RequestBody User user){return userService.logout();}
+    public Result logout(){return userService.logout();}
 //    @PostMapping("/login")
 //    public
 

@@ -1,5 +1,6 @@
 package com.gdut.backend.common;
 
+import com.gdut.backend.exception.CustomizeException;
 import lombok.Data;
 
 @Data
@@ -9,9 +10,9 @@ public class Result<T> {
     private long total;
     private T data;
 
-    public static Result fail(){
-        return result(400,"失败",0L,0);
-    }
+    public  static Result fail(){return result(400,"失败",0L,0);}
+    public  static Result fail(CustomizeException customizeException){return result(customizeException.getCode(),customizeException.getMessage(),0L,0);}
+
 
     public  static <T>Result success(T data){
         return result(200,"成功",0L,data);
@@ -22,6 +23,7 @@ public class Result<T> {
     public  static Result success(){
         return result(200,"成功",0L,null);
     }
+
     private static <T> Result result (int code,String msg,long total,T data){
         Result result = new Result();
         result.setCode(code);

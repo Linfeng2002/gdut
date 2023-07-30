@@ -22,7 +22,7 @@ public class LoginUserDetailService implements UserDetailsService {
 
     @Resource
     UserMapper userMapper;
-@Resource PasswordEncoder passwordEncoder;
+    @Resource PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
